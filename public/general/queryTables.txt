@@ -1,0 +1,22 @@
+
+
+create table tb_tasks(
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+task_name VARCHAR(128) NOT NULL,
+task_description VARCHAR(256) NOT NULL,
+task_inclusion_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+task_status VARCHAR (5) NOT NULL,
+task_comment VARCHAR (1024),
+task_author VARCHAR (256),
+task_conclusion_date TIMESTAMP,
+task_done_by VARCHAR (256)
+);
+
+create table tb_users(
+
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+user_name VARCHAR(128) NOT NULL,
+user_nick VARCHAR(128) NOT NULL,
+user_email VARCHAR(128) NOT NULL,
+user_register_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
+);

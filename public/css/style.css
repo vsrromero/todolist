@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #dce6ff;
+}
+
+main {
+    margin-bottom: 1%;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-self: flex-end;
+}
+
+section {
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.top{
+    width: 80%;
+    text-align: center;
+}
+
+.top h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: #505050;
+}
+
+.left {
+    width: 40%;
+    flex-direction: column;
+    background-color: #ffeaea;
+    padding: 6px;
+    margin-right: 5px;
+}
+
+.right {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    background-color: #eaffe4;
+    text-align: center;
+    padding: 6px;
+    margin-left: 5px;
+}
+
+.bottomMain {
+    width: 82%;
+    margin-top: 1%;
+    background-color: #f1f1f1;
+}
+
+.bottom {
+    width: 80%;
+}
+
+.title {
+    align-self: flex-start;
+}
+
+.mForm {
+    display: flex;
+    flex-direction: row;
+}
+
+.mFormLeft {
+    padding-top: 5px;
+}
+
+.mFormRight {
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+.tasksSummary {
+    display: flex;
+    height: 100%;
+    align-content: flex-end;
+}
+
+.tasksTitles {
+    margin: auto 0 auto 20px;
+}
+
+.tasksData {
+    margin: auto 0 auto 2px;
+}
