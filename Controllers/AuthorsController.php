@@ -1,20 +1,29 @@
 <?php
-    namespace Models;
-    use DBA;
+    
+    require_once '../Models/DBAModel.php';
 
-    Class AuthorsController extends DBA{
+    Class AuthorsController {
+
+        private $dbastmt;
 
         public function __construct()
         {
-            parent::__construct('todolist' , 'localhost' , 'root' , '');
+            $this->dbastmt = new DBAModel();
         }
-    
+
         public function showAuthors()
         {
-            $authors = $this->selectAuthors();
+            $authors = $this->dbastmt->selectAuthors();
             return $authors;
             
         }
+
+        public function insertAuthor($authorName, $authorEmail)
+        {
+            $result = $this->dbastmt->insertAuthor($authorName , $authorEmail);
+            return $result;
+        }
       
     }
+
 ?>

@@ -186,3 +186,8 @@ td{
     width: 100px;
     text-align: center;
 }
+
+.warning {
+    color: #f00;
+    font-weight: bold;
+}

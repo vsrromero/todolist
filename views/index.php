@@ -1,11 +1,10 @@
 <?php
 
-use Models\AuthorsController;
-
-    require_once '../Models/DBAModel.php';
     require_once '../Controllers/AuthorsController.php';
-    $dbastmt = new DBA('todolist','localhost','root','');
-    $showAuthors = new AuthorsController();
+    require_once '../Controllers/TasksController.php';
+    $authorstmt = new AuthorsController();
+    $taskstmt = new TasksController();
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,19 +14,6 @@ use Models\AuthorsController;
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="../public/css/style.css">
-
-    <script type="text/javascript">
-        function emailAlert(){
-        alert('Email already registered');
-        return false;
-        }
-
-        function fieldAlert(){
-        alert('You must fill all fields');
-        return false;
-        }
-    </script>
-
 </head>
 <body>
     <header>
@@ -42,42 +28,71 @@ use Models\AuthorsController;
                 <div class="title">
                     <h3>Create your task</h3>
                 </div>
+                <!--left form to create tasks-->
 
                 <div class="mForm">
                     <div class="mFormLeft">
-                        <label for="author">Task Author: </label><br />
-                        <label for="task">Task: </label><br />
-                        <label for="description">Description: </label><br />
-                        <label for="status">Status: </label><br />
+                        <label for="author">Task Author:* </label><br />
+                        <label for="task">Task:* </label><br />
+                        <label for="description">Description:* </label><br />
+                        <label for="status">Status:* </label><br />
                         <label for="comments">Comments: </label><br />
                     </div>
                     <div class="mFormRight">
-                            <form action="">
-                                <select name="author" placeholder="Task author" id="author" style="width:19em;">
-                                    <option value=""></option>
-                                    <?php 
-                                                $authors = $showAuthors->showAuthors();
-        
-                                                foreach($authors as $value){
-                                        
-                                                        echo "<option value='".$value['author_name']."'>".$value['author_name']."</option>";
-                                                           
-                                                }
-                                    ?>
-                                </select> <br />
-                                <input name="task" type="text" size="31" placeholder="My task" id="task"> <br />
-                                <input name="description" type="text" size="31" placeholder="What is your task about?" id="description"> <br />
-                                <select name="status" id="status">
-                                    <option value=""></option>
-                                    <option value="ToDo">To Do</option>
-                                    <option value="Doing">Doing</option>
-                                    <option value="Done">Done</option>
-                                </select> <br>
-                                <textarea name="comments" rows="10" cols="50" placeholder="Further comments about your task, how to do it, when, why, etc..." id="comments"></textarea><br />
-                                <input type="submit" value="Add Task">
+                        <form action="index.php" method="POST">
+                            <select name="author" placeholder="Task author" id="author" style="width:19em;">
+                                <option value=""></option>
+                                <?php 
+                                //Get the authors from DB and insert them into a <select> menu.
+                                            $authors = $authorstmt->showAuthors();
+    
+                                            foreach($authors as $value){
+                                    
+                                                    echo "<option value='".$value['author_email']."'>".$value['author_email'] . " - " . $value['author_name'] ."</option>";
+                                                        
+                                            }
+                                ?>
+                            </select> <br />
+                            <input name="task" type="text" size="31" placeholder="My task" id="task"> <br />
+                            <input name="description" type="text" size="31" placeholder="What is your task about?" id="description"> <br />
+                            <select name="status" id="status">
+                                <option value=""></option>
+                                <option value="ToDo">To Do</option>
+                                <option value="Doing">Doing</option>
+                                <option value="Done">Done</option>
+                            </select> <br />
+                            <textarea name="comments" rows="10" cols="50" placeholder="Further comments about your task, how to do it, when, why, etc..." id="comments"></textarea><br />
+                            <input type="submit" value="Add Task">
+                            <div>&nbsp;
+                            <?php 
+                            
+                                //delete task
+                                if(isset($_GET['id']))
+                                {
+                                    $taskId = addslashes($_GET['id']);
+                                    $taskstmt->deleteTask($taskId);
+                                    header("location: index.php");
 
-                            </form>
-                        </div>
+                                }
+                                //create task
+                                if(isset($_POST['author'])){
+                                    $taskAuthor = addslashes($_POST['author']);
+                                    $task = addslashes($_POST['task']);
+                                    $taskDescription = addslashes($_POST['description']);
+                                    $taskStatus = addslashes($_POST['status']);
+                                    $taskComments = addslashes($_POST['comments']);
+                                    if(!empty($taskAuthor) && !empty($task) && !empty($taskDescription) && !empty($taskStatus)){
+                                        $taskstmt->insertTask($taskAuthor , $task , $taskDescription , $taskStatus , $taskComments);
+                                    } else {
+                                        echo '<span class="warning">You must fill all mandatory (*) fields.</span>';
+                                    }
+                                }
+
+                            ?>
+                            </div>
+                        </form>
+                    </div>
+                <!--end of left form to create tasks-->
                 </div>
             </div>
 
@@ -87,12 +102,7 @@ use Models\AuthorsController;
             </div>
                 <div class="mForm">
                 <div class="authors">
-                <?php
 
-
-
-                ?>
-                
                     <div class="mFormLeft">
 
                         <label for="authorName">Name: </label><br />
@@ -101,31 +111,31 @@ use Models\AuthorsController;
                     </div>
 
                     <div class="mFormRight">
-                            <form action="" method="_GET">
+                            <form action="index.php?" method="POST">
                                 <input name="authorName" type="text" size="30" placeholder="Author Name" id="authorName"> <br />
                                 <input name="email" type="email" size="30" placeholder="author@email.com" id="email"> <br />
                                 <input type="submit" value="Add Author">
                             </form>
                     <div>&nbsp;
                     <?php 
-                    
-                    if(isset($_GET["authorName"]))
+                    //register a new Author
+                    if(isset($_POST["authorName"]))
                     {
-                        $authorName = addslashes($_GET["authorName"]);
-                        $email = addslashes($_GET["email"]);
+                        $authorName = addslashes($_POST["authorName"]);
+                        $email = addslashes($_POST["email"]);
                         if (!empty($authorName) && !empty($email)){
-                            if (!$dbastmt->insertAuthor($authorName , $email))
-                            {
-                                echo 'Email already registered';
-                            }
-                             
+
+                           if(!$authorstmt->insertAuthor($authorName , $email))
+                           {
+                               echo '<span class="warning">Email already registered</span>';
+                           }
                             
                         } else {
-                            echo 'You must fill every field';
+                            echo '<span class="warning">You must fill every field</span>';
                         }
-
+                        header("Refresh:0");
                     }
-                    
+
                     ?>
                     </div>
                     </div>
@@ -142,19 +152,19 @@ use Models\AuthorsController;
                     <div class="tasksData">
                     <?php 
                         //Count and return how many 'To Do' Results on tasks
-                        $count = $dbastmt->countToDo();
+                        $count = $taskstmt->countToDo();
                         echo $count;
                     ?>    
                     <br />
                     <?php 
                         //Count and return how many 'Doing' Results on tasks
-                        $count = $dbastmt->countDoing();
+                        $count = $taskstmt->countDoing();
                         echo $count;
                     ?>  
                     <br />
                     <?php 
                         //Count and return how many 'Done' Results on tasks
-                        $count = $dbastmt->countDone();
+                        $count = $taskstmt->countDone();
                         echo $count;
                     ?>
                     <br />
@@ -169,9 +179,10 @@ use Models\AuthorsController;
         <section>
 
                 <?php 
-
-                    $tasks = $dbastmt->showAllTasks();
-                    if (count($tasks)>0)
+  
+                //show tasks
+                    $tasks = $taskstmt->showAllTasks();
+                    if (count($tasks)>0) //check if there are tasks registered, if yes create a table, if not show message of no tasks to show
                     {
                         echo
                         '<table>
@@ -182,40 +193,40 @@ use Models\AuthorsController;
                         <th>Author</th>
                         <th>Inclusion Date</th>
                         <th></th>';
-                        foreach ($tasks as $row){
+                        for ($i = 0 ; $i < count($tasks)  ; $i++){
                             echo "<tr>";
-                            foreach ($row as $key => $value){
+                            foreach ($tasks[$i] as $key => $value){
+                                if ($key != 'id' && $key != 'task_conclusion_date' && $key != 'task_done_by'){
                                 echo "<td class='$key'>$value</td>";
+                                }
                             }
-                            echo '<td class="actions"><a href="#">Edit</a> <a href="#">Delete</a> </td>';
+                            echo '<td class="actions"><a href="#">Edit</a> <a href="index.php?id='.$tasks[$i]['id'].'">Delete</a> </td>';
                             echo "</tr>";
-                            echo "</table>";
                         }
                     }
-
+                    
                     else{
                         echo "<div style='margin-top: 15px;'>
-                                <h3>No task to show</h3>
-                            </div>";
+                        <h3>No task to show</h3>
+                        </div>";
                     }
-
+                    echo "</table>";
+                    
                 ?>
             </table>
         </section>
     </main>
 
     <footer>
-    
+
+        
     </footer>
-
-    <?php 
-
-
-        
-
-        
-    ?>
-
 
 </body>
 </html>
+<?php
+
+
+
+
+?>
