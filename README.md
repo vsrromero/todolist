@@ -18,4 +18,3 @@ there is much to be done here, and feel free to comment about my code.
 
 ▶ next - edit tasks
 
-⏭ Then - delete authors
