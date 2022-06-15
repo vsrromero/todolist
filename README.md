@@ -1,19 +1,21 @@
-# todolist
+# ✔ To Do List!
 
-This is simple but trying to make it well done according to the best practices and using MVC.
+👍 - This is simple but trying to make it well done according to the best practices and using MVC.
 
 there is much to be done here, and feel free to comment about my code.
 
-Working from now 15/06/2022
+⚡ <strong>What is working from now 15/06/2022 on the system?</strong>
 
-Add new tasks
-Delete tasks
-Show added tasks
-Add new authors
-Select authors from dropdown/select menu
+✅ Add new tasks <br />
+✅ Delete tasks <br />
+✅ Show added tasks <br />
+✅ Add new authors <br />
+✅ Select authors from dropdown/select menu <br />
+
+<hr>
 
 # What is next?
 
-next - edit tasks
+▶ next - edit tasks
 
-next - delete authors
+⏭ Then - delete authors
