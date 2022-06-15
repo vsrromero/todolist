@@ -107,7 +107,12 @@
             return $results;
         }
 
-        
+        public function deleteAuthor($authorEmail){
+            $delete = $this->dba->prepare("DELETE FROM tb_authors WHERE author_email = :authorEmail");
+            $delete->bindValue(":authorEmail" , $authorEmail);
+            $delete->execute();
+        }
+
     }
 
 ?>

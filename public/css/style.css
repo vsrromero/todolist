@@ -93,6 +93,11 @@ input[type="submit"] {
     padding-left: 5px;
 }
 
+.mFormDelete {
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
 .authors{
     display: flex;
     height: 100%;

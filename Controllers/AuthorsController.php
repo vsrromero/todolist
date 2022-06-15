@@ -23,6 +23,11 @@
             $result = $this->dbastmt->insertAuthor($authorName , $authorEmail);
             return $result;
         }
+
+        public function deleteAuthor($authorEmail)
+        {
+            $this->dbastmt->deleteAuthor($authorEmail);
+        }
       
     }
 

@@ -30,6 +30,8 @@
                 </div>
                 <!--left form to create tasks-->
 
+
+
                 <div class="mForm">
                     <div class="mFormLeft">
                         <label for="author">Task Author:* </label><br />
@@ -40,7 +42,7 @@
                     </div>
                     <div class="mFormRight">
                         <form action="index.php" method="POST">
-                            <select name="author" placeholder="Task author" id="author" style="width:19em;">
+                            <select name="author" id="author" style="width:19em;">
                                 <option value=""></option>
                                 <?php 
                                 //Get the authors from DB and insert them into a <select> menu.
@@ -86,6 +88,7 @@
                                     } else {
                                         echo '<span class="warning">You must fill all mandatory (*) fields.</span>';
                                     }
+                                    header("refresh: 5");
                                 }
 
                             ?>
@@ -98,48 +101,78 @@
 
             <div class="right">
             <div class="title">
-                    <h3>Insert Authors</h3>
+                    <h3>Authors</h3>
             </div>
                 <div class="mForm">
-                <div class="authors">
+                    <div class="authors">
 
-                    <div class="mFormLeft">
+                        <div class="mFormLeft">
+                            <h4>&nbsp;</h4>
+                            <label for="authorName">Name: </label><br />
+                            <label for="email">E-mail: </label><br />
+                        
+                        </div>
 
-                        <label for="authorName">Name: </label><br />
-                        <label for="email">E-mail: </label><br />
-                    
-                    </div>
+                        <div class="mFormRight">
+                                <h4>Insert new Author</h4>
+                                <form action="index.php?" method="POST">
+                                    <input name="authorName" type="text" size="30" placeholder="Author Name" id="authorName"> <br />
+                                    <input name="email" type="email" size="30" placeholder="author@email.com" id="email"> <br />
+                                    <input type="submit" value="Add Author">
+                                </form>
+                        <div>&nbsp;
+                        <?php 
+                        //register a new Author
+                        if(isset($_POST["authorName"]))
+                        {
+                            $authorName = addslashes($_POST["authorName"]);
+                            $email = addslashes($_POST["email"]);
+                            if (!empty($authorName) && !empty($email)){
 
-                    <div class="mFormRight">
-                            <form action="index.php?" method="POST">
-                                <input name="authorName" type="text" size="30" placeholder="Author Name" id="authorName"> <br />
-                                <input name="email" type="email" size="30" placeholder="author@email.com" id="email"> <br />
-                                <input type="submit" value="Add Author">
-                            </form>
-                    <div>&nbsp;
-                    <?php 
-                    //register a new Author
-                    if(isset($_POST["authorName"]))
-                    {
-                        $authorName = addslashes($_POST["authorName"]);
-                        $email = addslashes($_POST["email"]);
-                        if (!empty($authorName) && !empty($email)){
-
-                           if(!$authorstmt->insertAuthor($authorName , $email))
-                           {
-                               echo '<span class="warning">Email already registered</span>';
-                           }
-                            
-                        } else {
-                            echo '<span class="warning">You must fill every field</span>';
+                            if(!$authorstmt->insertAuthor($authorName , $email))
+                            {
+                                echo '<span class="warning">Email already registered</span>';
+                            }
+                                
+                            } else {
+                                echo '<span class="warning">You must fill every field</span>';
+                            }
+                            header("Refresh: 5");
                         }
-                        header("Refresh:0");
-                    }
 
-                    ?>
+                        ?>
+                        </div>
+                        </div>
                     </div>
+                    <!--Delete author section-->
+                    <?php
+                    if(isset($_POST['delAuthor'])){
+                        $emailAuthor = $_POST['delAuthor'];
+                        $authorstmt->deleteAuthor($emailAuthor);
+                        header('location: index.php');
+                    }
+                ?>
+                    <div class="mFormDelete" style="margin-left: 10%"> 
+                        <h4>Delete Authors</h4>
+                        <form action="" method="POST">
+                            <select name="delAuthor" style="width:19em;">
+                                <option value="">Select the author e-mail to be deleted.</option>
+                                <?php 
+                                //Get the authors from DB and insert them into a <select> menu.
+                                            $authors = $authorstmt->showAuthors();
+    
+                                            foreach($authors as $value){
+                                    
+                                                    echo "<option value='".$value['author_email']."'>".$value['author_email'] ."</option>";
+                                                        
+                                            }
+                                            var_dump($authors);
+                                ?>
+                            </select>
+                            <input type="submit" value="Delete">
+
+                        </form>
                     </div>
-                </div>
                 </div>
 
                 <div class="tasksSummary">
@@ -219,7 +252,6 @@
 
     <footer>
 
-        
     </footer>
 
 </body>
