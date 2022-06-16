@@ -6,26 +6,22 @@
 
         private $dbastmt;
 
-        public function __construct()
-        {
+        public function __construct() {
             $this->dbastmt = new DBAModel();
         }
-
-        public function showAuthors()
-        {
+        //select all authors
+        public function showAllAuthors() {
             $authors = $this->dbastmt->selectAuthors();
             return $authors;
             
         }
-
-        public function insertAuthor($authorName, $authorEmail)
-        {
+        //insert author
+        public function insertAuthor($authorName, $authorEmail) {
             $result = $this->dbastmt->insertAuthor($authorName , $authorEmail);
             return $result;
         }
-
-        public function deleteAuthor($authorEmail)
-        {
+        //delete author
+        public function deleteAuthor($authorEmail) {
             $this->dbastmt->deleteAuthor($authorEmail);
         }
       

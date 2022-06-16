@@ -30,7 +30,16 @@
                 </div>
                 <!--left form to create tasks-->
 
+                <?php 
+                
+                    //update task
+                    if(isset($_GET['update_id'])) {
+                    $taskId = addslashes($_GET['update_id']);
+                    $taskRetrived = $taskstmt->selectTaskPerId($taskId);
 
+                    }            
+                
+                ?>
 
                 <div class="mForm">
                     <div class="mFormLeft">
@@ -42,42 +51,41 @@
                     </div>
                     <div class="mFormRight">
                         <form action="index.php" method="POST">
+                            <!-- a php block is in all value on this form to set the retrived data from database on fields in case the variable $taskRetrived is set, this variable will be set once 'edit' is clicked, once it is clicked the method $_GET is called through the href tag <a href="uri?foo="> and get the data from database HINT: ctrl+click to check dependencies -->
                             <select name="author" id="author" style="width:19em;">
                                 <option value=""></option>
                                 <?php 
                                 //Get the authors from DB and insert them into a <select> menu.
-                                            $authors = $authorstmt->showAuthors();
+                                            $authors = $authorstmt->showAllAuthors();
     
-                                            foreach($authors as $value){
-                                    
+                                            foreach($authors as $value) {
                                                     echo "<option value='".$value['author_email']."'>".$value['author_email'] . " - " . $value['author_name'] ."</option>";
-                                                        
                                             }
                                 ?>
                             </select> <br />
-                            <input name="task" type="text" size="31" placeholder="My task" id="task"> <br />
-                            <input name="description" type="text" size="31" placeholder="What is your task about?" id="description"> <br />
+                            <input name="task" type="text" size="31" placeholder="My task" id="task" value="<?php if(isset($taskRetrived)){echo $taskRetrived['task_name'];} ?>"> <br />
+                            <input name="description" type="text" size="31" placeholder="What is your task about?" id="description" value="<?php if(isset($taskRetrived)){echo $taskRetrived['task_description'];} ?>"> <br />
                             <select name="status" id="status">
                                 <option value=""></option>
                                 <option value="ToDo">To Do</option>
                                 <option value="Doing">Doing</option>
                                 <option value="Done">Done</option>
                             </select> <br />
-                            <textarea name="comments" rows="10" cols="50" placeholder="Further comments about your task, how to do it, when, why, etc..." id="comments"></textarea><br />
-                            <input type="submit" value="Add Task">
+                            <textarea name="comments" rows="10" cols="50" placeholder="Further comments about your task, how to do it, when, why, etc..." id="comments" value="<?php if(isset($taskRetrived)){echo $taskRetrived['task_comment'];} ?>"></textarea><br />
+                            <input type="submit" value="<?php if(isset($taskRetrived)){echo 'Update task';} else {echo 'Add task';} ?>"> <!-- if $taskRetrived is set, then shows Update task as value on button, else, shows Add task as value-->
                             <div>&nbsp;
                             <?php 
+                            //php block that manipulate tasks, it was created here due to a problem while refreshing page due to the header() functions, if it down on code it returns an error 
                             
                                 //delete task
-                                if(isset($_GET['id']))
-                                {
+                                if(isset($_GET['id'])) {
                                     $taskId = addslashes($_GET['id']);
                                     $taskstmt->deleteTask($taskId);
                                     header("location: index.php");
-
                                 }
+
                                 //create task
-                                if(isset($_POST['author'])){
+                                if(isset($_POST['author'])) {
                                     $taskAuthor = addslashes($_POST['author']);
                                     $task = addslashes($_POST['task']);
                                     $taskDescription = addslashes($_POST['description']);
@@ -123,14 +131,12 @@
                         <div>&nbsp;
                         <?php 
                         //register a new Author
-                        if(isset($_POST["authorName"]))
-                        {
+                        if(isset($_POST["authorName"])) {
                             $authorName = addslashes($_POST["authorName"]);
                             $email = addslashes($_POST["email"]);
                             if (!empty($authorName) && !empty($email)){
 
-                            if(!$authorstmt->insertAuthor($authorName , $email))
-                            {
+                            if(!$authorstmt->insertAuthor($authorName , $email)) {
                                 echo '<span class="warning">Email already registered</span>';
                             }
                                 
@@ -159,14 +165,14 @@
                                 <option value="">Select the author e-mail to be deleted.</option>
                                 <?php 
                                 //Get the authors from DB and insert them into a <select> menu.
-                                            $authors = $authorstmt->showAuthors();
+                                            $authors = $authorstmt->showAllAuthors();
     
                                             foreach($authors as $value){
                                     
                                                     echo "<option value='".$value['author_email']."'>".$value['author_email'] ."</option>";
                                                         
                                             }
-                                            var_dump($authors);
+
                                 ?>
                             </select>
                             <input type="submit" value="Delete">
@@ -215,8 +221,8 @@
   
                 //show tasks
                     $tasks = $taskstmt->showAllTasks();
-                    if (count($tasks)>0) //check if there are tasks registered, if yes create a table, if not show message of no tasks to show
-                    {
+                    //check if there are tasks registered, if yes create a table, if not show message of no tasks to show
+                    if (count($tasks)>0) {
                         echo
                         '<table>
                         <th>Task</th>
@@ -233,7 +239,10 @@
                                 echo "<td class='$key'>$value</td>";
                                 }
                             }
-                            echo '<td class="actions"><a href="#">Edit</a> <a href="index.php?id='.$tasks[$i]['id'].'">Delete</a> </td>';
+                            echo    '<td class="actions">
+                                        <a href="index.php?update_id='.$tasks[$i]['id'].'">Edit</a> 
+                                        <a href="index.php?id='.$tasks[$i]['id'].'">Delete</a> 
+                                    </td>';
                             echo "</tr>";
                         }
                     }
@@ -256,9 +265,3 @@
 
 </body>
 </html>
-<?php
-
-
-
-
-?>

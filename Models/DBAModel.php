@@ -8,8 +8,7 @@
         protected $user = 'root';
         protected $pass = '';
 
-        public function __construct()
-        {
+        public function __construct(){
             try {
             $this->dba = new PDO("mysql:dbname=$this->scheme; host=$this->local" , "$this->user" , "$this->pass");
             } catch (PDOException $e) {
@@ -31,7 +30,7 @@
 
         //counts amount of To Do tasks
         public function selectToDo(){
-            
+            $results = array();
             $select = $this->dba->prepare("SELECT * FROM tb_tasks WHERE task_status = 'ToDo'");
             $select->execute();
             $results = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -40,7 +39,7 @@
 
         //counts amount of Doing tasks
         public function selectDoing(){
-            
+            $results = array();
             $select = $this->dba->prepare("SELECT * FROM tb_tasks WHERE task_status = 'Doing'");
             $select->execute();
             $results = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -49,7 +48,7 @@
         
         //counts amount of Done tasks
         public function selectDone(){
-            
+            $results = array();
             $select = $this->dba->prepare("SELECT * FROM tb_tasks WHERE task_status = 'Done'");
             $select->execute();
             $results = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -57,7 +56,7 @@
         }
 
         //function to insert a new task
-        public function insertTask($taskAuthor , $taskName , $taskDescription , $taskStatus , $taskComment) {
+        public function insertTask($taskAuthor , $taskName , $taskDescription , $taskStatus , $taskComment){
 
         $insert = $this->dba->prepare("INSERT INTO tb_tasks(task_author, task_name, task_description, task_status, task_comment) VALUES(:taskAuthor, :taskName, :taskDescription, :taskStatus, :taskComment)");
         $insert->bindValue(":taskAuthor" , $taskAuthor);
@@ -96,21 +95,35 @@
             $insert->bindValue(":author_email" , $authorEmail);
             $insert->execute();
             return true;
-
             }
         }
-
+        //select all authors and order by name
         public function selectAuthors(){
+            $results = array();
             $select = $this->dba->prepare("SELECT * FROM tb_authors ORDER BY author_name");
             $select->execute();
             $results = $select->fetchAll(PDO::FETCH_ASSOC);
             return $results;
         }
-
+        //delete an author by email address
         public function deleteAuthor($authorEmail){
             $delete = $this->dba->prepare("DELETE FROM tb_authors WHERE author_email = :authorEmail");
             $delete->bindValue(":authorEmail" , $authorEmail);
             $delete->execute();
+        }
+        //select a task by id
+        public function selecTasktById($id){
+            $results = array();
+            $select = $this->dba->prepare("SELECT * FROM tb_tasks WHERE id = :id");
+            $select->bindValue(":id" , $id);
+            $select->execute();
+            $results = $select->fetch(PDO::FETCH_ASSOC);
+            return $results;
+        }
+
+        //update task
+        public function updateTask($id){
+
         }
 
     }
