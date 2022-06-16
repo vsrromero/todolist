@@ -10,6 +10,7 @@ there is much to be done here, and feel free to comment about my code.
 ✅ Delete tasks <br />
 ✅ Show added tasks <br />
 ✅ Add new authors <br />
+✅ Delete authors <br />
 ✅ Select authors from dropdown/select menu <br />
 
 <hr>
@@ -18,4 +19,3 @@ there is much to be done here, and feel free to comment about my code.
 
 ▶ next - edit tasks
 
-⏭ Then - delete authors
