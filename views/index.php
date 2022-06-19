@@ -38,6 +38,7 @@
                     $taskRetrived = $taskstmt->selectTaskPerId($taskId);
 
                     }            
+
                 
                 ?>
 
@@ -75,13 +76,12 @@
                             <input type="submit" value="<?php if(isset($taskRetrived)){echo 'Update task';} else {echo 'Add task';} ?>"> <!-- if $taskRetrived is set, then shows Update task as value on button, else, shows Add task as value-->
                             <div>&nbsp;
                             <?php 
-                            //php block that manipulate tasks, it was created here due to a problem while refreshing page due to the header() functions, if it down on code it returns an error 
                             
                                 //delete task
                                 if(isset($_GET['id'])) {
                                     $taskId = addslashes($_GET['id']);
                                     $taskstmt->deleteTask($taskId);
-                                    header("location: index.php");
+
                                 }
 
                                 //create task
@@ -96,7 +96,7 @@
                                     } else {
                                         echo '<span class="warning">You must fill all mandatory (*) fields.</span>';
                                     }
-                                    header("refresh: 5");
+
                                 }
 
                             ?>
@@ -113,20 +113,18 @@
             </div>
                 <div class="mForm">
                     <div class="authors">
-
                         <div class="mFormLeft">
                             <h4>&nbsp;</h4>
                             <label for="authorName">Name: </label><br />
                             <label for="email">E-mail: </label><br />
                         
                         </div>
-
                         <div class="mFormRight">
                                 <h4>Insert new Author</h4>
                                 <form action="index.php?" method="POST">
                                     <input name="authorName" type="text" size="30" placeholder="Author Name" id="authorName"> <br />
                                     <input name="email" type="email" size="30" placeholder="author@email.com" id="email"> <br />
-                                    <input type="submit" value="Add Author">
+                                    <input name="submitBtn"type="submit" value="Add Author">
                                 </form>
                         <div>&nbsp;
                         <?php 
@@ -143,7 +141,8 @@
                             } else {
                                 echo '<span class="warning">You must fill every field</span>';
                             }
-                            header("Refresh: 5");
+
+
                         }
 
                         ?>
@@ -155,7 +154,6 @@
                     if(isset($_POST['delAuthor'])){
                         $emailAuthor = $_POST['delAuthor'];
                         $authorstmt->deleteAuthor($emailAuthor);
-                        header('location: index.php');
                     }
                 ?>
                     <div class="mFormDelete" style="margin-left: 10%"> 
@@ -265,3 +263,23 @@
 
 </body>
 </html>
+
+<?php
+
+$dados = [
+    
+    ['thay','triacca','05465764'],
+    ['victor','romero','65655656']
+];
+echo '<pre>';
+var_dump($dados);
+echo '</pre>';
+
+
+foreach($dados as $row);
+    foreach($row as $key => $value){
+        echo $value;
+    }
+
+
+?>
