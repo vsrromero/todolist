@@ -152,7 +152,7 @@ td{
     border-color: #000;
 }
 
-.task_name {
+/*.task_name {
     width: 100px;
 }
 .task_description{
@@ -190,7 +190,7 @@ td{
 .actions{
     width: 100px;
     text-align: center;
-}
+}*/
 
 .warning {
     color: #f00;

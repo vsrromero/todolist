@@ -32,13 +32,14 @@
         return $select;
     }
     //insert task
-    public function insertTask($taskAuthor , $taskName , $taskDescription , $taskStatus , $taskComment) {
-        $insert = $this->dbastmt->insertTask($taskAuthor , $taskName , $taskDescription , $taskStatus , $taskComment);
+    public function insertTask($taskAuthor , $taskName , $taskStatus , $taskComment) {
+        $insert = $this->dbastmt->insertTask($taskAuthor , $taskName , $taskStatus , $taskComment);
 
     }
     //delete task
     public function deleteTask($taskId) {
-        $delete = $this->dbastmt->deleteTask($taskId);
+        $task = addslashes($taskId);
+        $delete = $this->dbastmt->deleteTask($task);
     }
 
     //select task per id
@@ -48,8 +49,8 @@
     }
 
     //update task
-    public function updateTask($id) {
-        $update = $this->dbastmt->updateTask($id);
+    public function updateTask($id, $taskName, $taskStatus , $taskComment, $taskAuthor) {
+        $update = $this->dbastmt->updateTask($id, $taskName, $taskStatus , $taskComment, $taskAuthor);
     }
 }
 

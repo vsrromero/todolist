@@ -22,7 +22,7 @@
         //function that select and show all tasks
         public function showAllTasks(){
             $results = array();
-            $select = $this->dba->prepare("SELECT * FROM tb_tasks ORDER BY task_inclusion_date");
+            $select = $this->dba->prepare("SELECT tb_tasks.id, tb_tasks.task_name, tb_tasks.task_status, tb_tasks.task_comment, tb_authors.author_name, tb_tasks.task_inclusion_date FROM tb_tasks INNER JOIN tb_authors ON tb_tasks.author = tb_authors.id ORDER BY task_inclusion_date");
             $select->execute();
             $results = $select->fetchAll(PDO::FETCH_ASSOC);
             return $results;
@@ -56,12 +56,11 @@
         }
 
         //function to insert a new task
-        public function insertTask($taskAuthor , $taskName , $taskDescription , $taskStatus , $taskComment){
+        public function insertTask($taskAuthor , $taskName , $taskStatus , $taskComment){
 
-        $insert = $this->dba->prepare("INSERT INTO tb_tasks(task_author, task_name, task_description, task_status, task_comment) VALUES(:taskAuthor, :taskName, :taskDescription, :taskStatus, :taskComment)");
-        $insert->bindValue(":taskAuthor" , $taskAuthor);
+        $insert = $this->dba->prepare("INSERT INTO tb_tasks(author, task_name, task_status, task_comment) VALUES(:author, :taskName, :taskStatus, :taskComment)");
+        $insert->bindValue(":author" , $taskAuthor);
         $insert->bindValue(":taskName" , $taskName);
-        $insert->bindValue(":taskDescription" , $taskDescription);
         $insert->bindValue(":taskStatus" , $taskStatus);
         $insert->bindValue(":taskComment" , $taskComment);
         $insert->execute();
@@ -122,7 +121,15 @@
         }
 
         //update task
-        public function updateTask($id){
+        public function updateTask($id, $task_name, $task_status, $task_comment, $author){
+            $update = array();
+            $update = $this->dba->prepare("UPDATE tb_tasks SET task_name = :TASK_NAME, task_status = :task_status, task_comment = :task_comment, author = :author WHERE id = :id");
+            $update->bindValue(":id" , $id);
+            $update->bindValue(":task_name" , $task_name);
+            $update->bindValue(":task_status" , $task_status);
+            $update->bindValue(":task_comment" , $task_comment);
+            $update->bindValue(":author" , $author);
+            $update->execute();
 
         }
 
